@@ -54,23 +54,14 @@ const feedbacks = [
     name: "Sophie Palmer",
     store: "App Store",
     rate: 5,
-    comment:
-      "Great app, so easy to use. Free service too… get your items sold fast & free, no sales commission…",
+    comment: "Great app, so easy to use.",
   },
 ];
 </script>
 
 <template>
   <div
-    class="
-      container
-      flex
-      items-center
-      justify-between
-      mx-auto
-      w-[1240px]
-      px-8
-    "
+    class="container flex items-center justify-between mx-auto w-[1240px] px-8"
   >
     <div class="body">
       <div class="main-banner flex justify-center mt-5 mb-10">
@@ -97,43 +88,39 @@ const feedbacks = [
           </div>
         </div>
         <div class="feedback mt-[48px] mb-[32px]">
-          <p class="font-bold mb-[32px]">See what Shpockers are saying</p>
+          <p class="font-bold mb-[32px] text-3xl leading-[42px]">
+            See what Shpockers are saying
+          </p>
           <div
-            class="container feedback-items  gap-4 text-left flex flex-wrap w-full"
+            class="
+              container
+              grid
+              feedback-items
+              grid-cols-3
+              gap-4
+              text-left
+              w-full
+              items-start
+            "
           >
+            <div
+              v-for="n in 3"
+              :key="n"
+              class="feedback-items-column space-y-4"
+            >
               <FeedbackCard
-                v-for="feedback in feedbacks"
-                :key="feedback"
-                :comment="feedback.comment"
-                :rateNumber="feedback.rate"
-                :rateFrom="feedback.store"
-                :rater="feedback.name"
+                :comment="feedbacks[2 * n - 2].comment"
+                :rateNumber="feedbacks[2 * n - 2].rate"
+                :rateFrom="feedbacks[2 * n - 2].store"
+                :rater="feedbacks[2 * n - 2].name"
               />
-            <!-- <div class="feedback-items-column space-y-4">
-            </div>
-            <div class="feedback-items-column space-y-4">
               <FeedbackCard
-                v-for="n in 2"
-                :key="n"
-                comment="Excellent platform to buy and sell second hand goods. Very
-                  easy to use"
-                :rateNumber="5"
-                rateFrom="Google Play"
-                rater="Emma Louise"
+                :comment="feedbacks[2 * n - 1].comment"
+                :rateNumber="feedbacks[2 * n - 1].rate"
+                :rateFrom="feedbacks[2 * n - 1].store"
+                :rater="feedbacks[2 * n - 1].name"
               />
             </div>
-            <div class="feedback-items-column space-y-4">
-              <FeedbackCard
-                v-for="n in 2"
-                :key="n"
-                comment="I've used Shpock for a few years now, for a range of everyday
-                  and specialist items to sell and buy, the review systems is
-                  great and realistic. Full confidence!"
-                :rateNumber="5"
-                rateFrom="Google Play"
-                rater="Emma Louise"
-              />
-            </div> -->
           </div>
         </div>
         <div class="flex justify-center relative">
@@ -242,18 +229,8 @@ const feedbacks = [
     line-height: 22px;
   }
   .feedback {
-    > p:nth-child(1) {
-      font-size: 30px;
-      line-height: 42px;
-    }
     :deep .the-card--variant-outlined {
       border: 1px solid rgb(222, 225, 222);
-    }
-    .feedback-items-column {
-      p {
-        font-size: 16px;
-        line-height: 22px;
-      }
     }
   }
 }

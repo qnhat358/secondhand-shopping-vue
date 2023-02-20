@@ -23,8 +23,8 @@ const props = defineProps({
 });
 </script>
 <template>
-  <the-card class="!shadow-none pointer-events-none w-[380px]">
-    <p>"{{comment}}"</p>
+  <the-card class="!shadow-none pointer-events-none">
+    <p class="text-base leading-5">"{{comment}}"</p>
     <font-awesome-icon
       v-for="n in rateNumber"
       :key="n"
@@ -33,8 +33,8 @@ const props = defineProps({
       class="mt-4 mb-1"
     />
     <div class="flex">
-      <p class="font-bold">{{props.rater}} ·&nbsp;</p>
-      <p>{{props.rateFrom}} Review</p>
+      <p class="font-bold text-sm">{{props.rater}} ·&nbsp;</p>
+      <p class="text-sm">{{props.rateFrom}} Review</p>
     </div>
   </the-card>
 </template>
