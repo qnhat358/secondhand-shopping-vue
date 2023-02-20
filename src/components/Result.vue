@@ -20,7 +20,6 @@ const categories = [
 <template>
   <div
     class="
-      container
       flex
       items-center
       justify-between

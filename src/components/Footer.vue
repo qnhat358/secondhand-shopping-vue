@@ -11,7 +11,7 @@ const changeLanguage = (newLanguage) => {
 
 <template>
   <div class="flex flex-col w-full items-center">
-    <hr class="h-px bg-gray-200 border-0 dark:bg-gray-700 w-[100vw]">
+    <hr class="h-px bg-gray-200 border-0 dark:bg-gray-700 w-full">
     <div class="grid grid-cols-4 h-[290px] w-[1240px]">
       <div class="flex flex-col p-[32px]">
         <p class="font-bold text-[16px] leading-[22px] mb-[16px]">
@@ -51,7 +51,7 @@ const changeLanguage = (newLanguage) => {
         <p>© finderly GmbH & Co KG 2023</p>
       </div>
     </div>
-    <hr class="h-px bg-gray-200 border-0 dark:bg-gray-700 w-[100vw]">
+    <hr class="h-px bg-gray-200 border-0 dark:bg-gray-700 w-full">
     <div class="footer-icon flex justify-center content-center space-x-[31px] h-[72px] py-[20px]">
       <svg
         xmlns="http://www.w3.org/2000/svg"

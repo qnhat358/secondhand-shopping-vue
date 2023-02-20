@@ -31,7 +31,7 @@ watch(
 
 <template>
   <!-- Layout component -->
-  <div class="container w-full mx-auto flex justify-center items-center overflow-x-hidden">
+  <div class="w-full mx-auto flex justify-center items-center">
     <component :is="currentLayout" v-if="isRouterLoaded">
       <RouterView />
     </component>

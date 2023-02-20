@@ -44,12 +44,12 @@ onBeforeMount(async () => {
   >
     <div
       class="
-        container
         flex flex-wrap
         items-center
         justify-between
         mx-auto
         w-[1240px]
+        h-full
         px-8
       "
     >
@@ -163,7 +163,11 @@ onBeforeMount(async () => {
             >
           </li>
           <li>
-            <Dropdown :options="dropdownItems" location="bottom-left" menuWidth="250px">
+            <Dropdown
+              :options="dropdownItems"
+              location="bottom-left"
+              menuWidth="250px"
+            >
               <template v-slot:button>
                 <div
                   class="
@@ -171,7 +175,8 @@ onBeforeMount(async () => {
                     font-bold
                     hover:bg-transparent hover:text-gray-500
                   "
-                  ><svg
+                >
+                  <svg
                     xmlns="http://www.w3.org/2000/svg"
                     fill="none"
                     viewBox="0 0 24 24"
@@ -183,8 +188,9 @@ onBeforeMount(async () => {
                       stroke-linecap="round"
                       stroke-linejoin="round"
                       d="M6.75 12a.75.75 0 11-1.5 0 .75.75 0 011.5 0zM12.75 12a.75.75 0 11-1.5 0 .75.75 0 011.5 0zM18.75 12a.75.75 0 11-1.5 0 .75.75 0 011.5 0z"
-                    /></svg
-                ></div>
+                    />
+                  </svg>
+                </div>
               </template>
             </Dropdown>
           </li>
@@ -192,87 +198,6 @@ onBeforeMount(async () => {
       </div>
     </div>
   </nav>
-
-  <!-- <nav class="container mx-auto px-10 fixed w-full z-20 top-0 left-0">
-    <div class="container flex content-center justify-between">
-      <div class="left flex">
-        <img src="../assets/images/shpock.svg" width="146.22" />
-        <div class="flex items-center ml-4">
-          <label for="simple-search" class="sr-only">Search</label>
-          <div class="relative w-full">
-            <div
-              class="
-                flex
-                absolute
-                inset-y-0
-                left-0
-                items-center
-                pl-3
-                pointer-events-none
-              "
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke-width="1.5"
-                stroke="currentColor"
-                class="w-6 h-6 z-50"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z"
-                />
-              </svg>
-            </div>
-            <input
-              type="text"
-              id="simple-search"
-              class="
-                bg-gray-50
-                border border-gray-300
-                text-gray-900 text-sm
-                rounded-full
-                focus:ring-blue-500 focus:border-blue-500
-                block
-                w-full
-                pl-10
-                p-2.5
-                dark:bg-gray-700
-                dark:border-gray-600
-                dark:placeholder-gray-400
-                dark:text-white
-                dark:focus:ring-blue-500
-                dark:focus:border-blue-500
-              "
-              placeholder="What are you looking for..."
-              required
-            />
-          </div>
-        </div>
-      </div>
-      <div class="right flex justify-space-between items-center">
-        <p>+ Add new listing</p>
-        <p>Sign up</p>
-        <p>Log in</p>
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke-width="1.5"
-          stroke="black"
-          class="w-6 h-6"
-        >
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            d="M6.75 12a.75.75 0 11-1.5 0 .75.75 0 011.5 0zM12.75 12a.75.75 0 11-1.5 0 .75.75 0 011.5 0zM18.75 12a.75.75 0 11-1.5 0 .75.75 0 011.5 0z"
-          />
-        </svg>
-      </div>
-    </div>
-  </nav> -->
 </template>
 
 <style lang="scss" scoped>

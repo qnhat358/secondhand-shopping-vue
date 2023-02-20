@@ -7,12 +7,12 @@ const route = useRoute();
 </script>
 
 <template>
-  <div>
+  <div class="w-full">
     <!-- Header -->
     <Header></Header>
 
     <!-- Main Content -->
-    <div class="simulation-main mt-[72px]">
+    <div class="mt-[72px]">
       <slot></slot>
     </div>
     <Footer class="mt-[41px]"></Footer>

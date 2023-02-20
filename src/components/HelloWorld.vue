@@ -61,7 +61,7 @@ const feedbacks = [
 
 <template>
   <div
-    class="container flex items-center justify-between mx-auto w-[1240px] px-8"
+    class="flex items-center justify-between mx-auto w-[1240px] px-8"
   >
     <div class="body">
       <div class="main-banner flex justify-center mt-5 mb-10">
@@ -93,7 +93,6 @@ const feedbacks = [
           </p>
           <div
             class="
-              container
               grid
               feedback-items
               grid-cols-3
