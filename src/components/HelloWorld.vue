@@ -63,7 +63,7 @@ const feedbacks = [
   <div
     class="flex items-center justify-between mx-auto w-[1240px] px-8"
   >
-    <div class="body">
+    <div>
       <div class="main-banner flex justify-center mt-5 mb-10">
         <div class="main-banner__text">
           <p class="font-bold mb-4">SELL YOUR STUFF & BAG A BARGAIN.</p>

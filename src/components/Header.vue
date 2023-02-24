@@ -168,7 +168,7 @@ onBeforeMount(async () => {
               location="bottom-left"
               menuWidth="250px"
             >
-              <template v-slot:button>
+              <template v-slot:buttonLabel>
                 <div
                   class="
                     text-black text-[16px]

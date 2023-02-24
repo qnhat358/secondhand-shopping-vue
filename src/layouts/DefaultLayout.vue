@@ -12,10 +12,10 @@ const route = useRoute();
     <Header></Header>
 
     <!-- Main Content -->
-    <div class="mt-[72px]">
+    <div class="mt-[72px] pb-[41px]" :class="{'bg-[#F7F8F7]':route.name == 'result'}">
       <slot></slot>
     </div>
-    <Footer class="mt-[41px]"></Footer>
+    <Footer></Footer>
   </div>
 </template>
 

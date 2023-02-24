@@ -46,7 +46,8 @@ const changeLanguage = (newLanguage) => {
         </div>
       </div>
       <div class="grid justify-items-end gap-4 p-[32px] h-fit">
-        <Dropdown :label="language" :options="items" location="top-left"></Dropdown>
+        <Dropdown v-model:label="language" :options="items" location="top-left">
+        </Dropdown>
         <img src="../assets/images/shpock.svg" class="w-[153px]" />
         <p>© finderly GmbH & Co KG 2023</p>
       </div>

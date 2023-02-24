@@ -1,18 +1,22 @@
 <template>
-  <Result />
+  <Result class="result"/>
 </template>
 
 <script>
 import { defineComponent } from 'vue';
 
 // Components
-import HelloWorld from '../components/HelloWorld.vue';
+import Result from '../components/Result.vue';
 
 export default defineComponent({
   name: 'ResultView',
 
   components: {
-    HelloWorld,
+    Result,
   },
+
+  // setup() {
+  //   document.body.className = "result";
+  // },
 });
 </script>

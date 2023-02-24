@@ -7,7 +7,16 @@ module.exports = {
     'node_modules/flowbite-vue/**/*.{vue,js,jsx,ts,tsx}',
   ],
   theme: {
-    extend: {},
+    extend: {
+      keyframes: {
+        slide: {
+          '100%': { right: 0 },
+        },
+      },
+      animation: {
+        'slide-from-right': 'slide 0.5s forwards',
+      },
+    },
   },
   plugins: [
     require('flowbite/plugin')
