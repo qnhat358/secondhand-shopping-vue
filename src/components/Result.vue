@@ -1,10 +1,49 @@
 <script setup>
 import { ref } from "vue";
 import SlideImageGroup from "./common/SlideImageGroup.vue";
+import InputRange from "./common/InputRange.vue";
 import FeedbackCard from "./home/FeedbackCard.vue";
-import Dropdown from "./common/Dropdown.vue";
+import FilterDropdown from "./result/FilterDropdown.vue";
 
-const filterValue = ref("Bathroom Cabinets & Storage");
+const filterValue = ref({
+  category: "",
+  location: null,
+  price: "",
+  dateListed: "",
+  sort: "",
+});
+const locationArray = [
+  1,
+  2,
+  3,
+  4,
+  5,
+  10,
+  15,
+  20,
+  30,
+  60,
+  100,
+  200,
+  300,
+  500,
+  1000,
+  "Everywhere",
+];
+const dateListedArray = [
+  "Any time",
+  "Past 24 hours",
+  "Past Week",
+  "Past Month",
+];
+const sortArray = [
+  "Closest listing first",
+  "Relevance",
+  "Newest listing first",
+  "Price high to low",
+  "Price low to high",
+];
+const locationValue = ref(0);
 const searchValue = ref("result");
 const isShowSlideMenu = ref(false);
 const isSlideLeft = ref([false]);
@@ -56,54 +95,48 @@ const mainCategories = ref([
   { name: "Baby & Toddler", icon: "baby-carriage" },
 ]);
 
-const subCategories = ref([]);
-
+const subCategories = ref([{ subMenu: mainCategories }]);
 const categoryClickHandle = (category, toggleMenu) => {
   if (category.subMenu) {
-    isSlideLeft.value[0] = true;
-    isSlideRight.value[0] = false;
-    subCategories.value.push(category);
+    subCategories.value[subCategories.value.length - 1].position = "left";
+    subCategories.value.push({ ...category, position: "center" });
   } else {
-    filterValue.value = category.name;
+    filterValue.value.category = category.name;
     toggleMenu();
-    subCategories.value = [];
-    isSlideLeft.value = false;
-    isSlideRight.value = false;
+    subCategories.value = [{ subMenu: mainCategories }];
   }
 };
 
 const categoryTurnBackClickHandle = () => {
   subCategories.value.pop();
-  if (subCategories.value.length == 0) {
-    isSlideLeft.value[0] = false;
-    isSlideRight.value[0] = false;
-  }
+  subCategories.value[subCategories.value.length - 1].position = "center";
+};
+
+const clickDateListedHandle = (dateListed, toggleMenu) => {
+  filterValue.value.dateListed = dateListed;
+  toggleMenu();
+};
+
+const clickSortHandle = (sort, toggleMenu) => {
+  filterValue.value.sort = sort;
+  toggleMenu();
 };
 </script>
 
 <template>
-  <div class="flex items-center justify-between mx-auto w-[1240px] px-8">
+  <div class="flex justify-between mx-auto w-[1240px] h-[650px] px-8">
     <div>
       <nav class="flex" aria-label="Breadcrumb">
         <ol class="inline-flex items-center">
           <li class="inline-flex items-center">
             <router-link
               :to="{ name: 'home' }"
-              class="
-                inline-flex
-                items-center
-                text-base
-                leading-[22px]
-                font-bold
-                text-black
-                hover:bg-transparent hover:text-gray-500
-                underline
-              "
+              class="inline-flex items-center text-base leading-[22px] font-bold text-black hover:bg-transparent hover:text-gray-500 underline"
             >
               Home
             </router-link>
           </li>
-          <li>
+          <li v-if="filterValue.category">
             <div class="flex items-center">
               <svg
                 aria-hidden="true"
@@ -120,15 +153,8 @@ const categoryTurnBackClickHandle = () => {
               </svg>
               <a
                 href="#"
-                class="
-                  text-base
-                  leading-[22px]
-                  font-bold
-                  text-black
-                  hover:bg-transparent hover:text-gray-500
-                  underline
-                "
-                >{{ filterValue }}</a
+                class="text-base leading-[22px] font-bold text-black hover:bg-transparent hover:text-gray-500 underline"
+                >{{ filterValue.category }}</a
               >
             </div>
           </li>
@@ -154,295 +180,330 @@ const categoryTurnBackClickHandle = () => {
           </li>
         </ol>
       </nav>
-      <p class="font-bold text-black text-3xl leading-[42px]">
-        Ads for “{{ searchValue }}” for Sale in “{{ filterValue }}”
-      </p>
+      <span class="font-bold text-black text-3xl leading-[42px]">
+        Ads for “{{ searchValue }}” for Sale
+      </span>
+      <span
+        v-if="filterValue.category"
+        class="font-bold text-black text-3xl leading-[42px]"
+      >
+        in “{{ filterValue.category }}”
+      </span>
       <div class="flex space-x-2">
-        <Dropdown
+        <FilterDropdown
+          v-model="filterValue.category"
+          label="Category"
           :options="mainCategories"
           location="bottom-right"
           menuWidth="320px"
           menuHeight="360px"
         >
-          <template v-slot:button>
-            <button
-              class="
-                flex
-                items-center
-                justify-between
-                w-full
-                px-4
-                py-2
-                text-base
-                leading-[22px]
-                bg-white
-                rounded-full
-                border border-gray-200
-                hover:bg-[#E2E8EB]
-              "
-            >
-              Category
-              <svg
-                class="w-4 h-4 ml-1"
-                aria-hidden="true"
-                fill="currentColor"
-                viewBox="0 0 20 20"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  fill-rule="evenodd"
-                  d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-                  clip-rule="evenodd"
-                ></path>
-              </svg>
-            </button>
-          </template>
           <template #menu="{ toggleMenu }">
-            <div class="flex relative dropdown-menu">
+            <transition-group name="slide">
               <div
-                class="
-                  w-[320px]
-                  absolute
-                  transition-all
-                  duration-500
-                  h-[360px]
-                  overflow-y-scroll
-                "
-                :class="{
-                  'slide-to-left': isSlideLeft[0],
-                  'slide-to-right': isSlideRight[0],
-                }"
-              >
-                <ul
-                  id="slide"
-                  class="text-[16px] leading-[22px] py-2"
-                  aria-labelledby="dropdownButton"
-                >
-                  <li
-                    v-for="(category, index) in mainCategories"
-                    :key="index"
-                    :value="category.name"
-                    @click="categoryClickHandle(category, toggleMenu)"
-                    class="block"
-                  >
-                    <p
-                      class="
-                        block
-                        px-4
-                        py-2
-                        hover:bg-gray-100
-                        dark:hover:bg-gray-600 dark:hover:text-white
-                        cursor-pointer
-                      "
-                    >
-                      {{ category.name }}
-                    </p>
-                  </li>
-                </ul>
-              </div>
-              <div
-                class="
-                  min-w-[320px]
-                  absolute
-                  left-full
-                  transition-all
-                  duration-500
-                  h-[360px]
-                  overflow-y-scroll
-                "
+                class="min-w-[320px] absolute transition-all duration-500 h-[360px] divide-gray-200 divide-y"
                 v-for="(subCategory, index) in subCategories"
                 :key="index"
                 :class="{
-                  'slide-to-left': isSlideLeft[index+1],
-                  'slide-to-right': isSlideRight[index+1],
+                  '-translate-x-full': subCategory.position == 'left',
                 }"
               >
-                <span @click="categoryTurnBackClickHandle">{{
-                  subCategory.name
-                }}</span>
-                <ul
-                  class="text-[16px] leading-[22px] py-2"
-                  aria-labelledby="dropdownButton"
+                <div
+                  v-if="subCategory.name"
+                  @click="categoryTurnBackClickHandle"
+                  class="flex items-center cursor-pointer h-[50px] font-bold"
                 >
-                  <li
-                    v-for="(category, index) in subCategory.subMenu"
-                    :key="index"
-                    :value="category.name"
-                    @click="categoryClickHandle(category, toggleMenu)"
-                    class="block"
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke-width="1.5"
+                    stroke="currentColor"
+                    class="w-6 h-6"
                   >
-                    <p
-                      class="
-                        block
-                        px-4
-                        py-2
-                        hover:bg-gray-100
-                        dark:hover:bg-gray-600 dark:hover:text-white
-                        cursor-pointer
-                      "
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      d="M15.75 19.5L8.25 12l7.5-7.5"
+                    />
+                  </svg>
+                  {{ subCategory.name }}
+                </div>
+                <div class="h-full overflow-y-auto">
+                  <ul class="text-[16px] leading-[22px]">
+                    <li
+                      v-for="(category, index) in subCategory.subMenu"
+                      :key="index"
+                      :value="category.name"
+                      @click="categoryClickHandle(category, toggleMenu)"
+                      class="block"
                     >
-                      {{ category.name }}
-                    </p>
-                  </li>
-                </ul>
+                      <div
+                        class="flex items-center justify-between px-2 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white cursor-pointer h-12"
+                      >
+                        <div class="flex items-center pl-6">
+                          <font-awesome-icon
+                            v-if="category.icon"
+                            :icon="`fa-solid fa-${category.icon}`"
+                            color="black"
+                            class="mr-2"
+                          />
+                          {{ category.name }}
+                        </div>
+                        <svg
+                          v-if="category.subMenu"
+                          aria-hidden="true"
+                          class="w-6 h-6"
+                          fill="currentColor"
+                          viewBox="0 0 20 20"
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <path
+                            fill-rule="evenodd"
+                            d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
+                            clip-rule="evenodd"
+                          ></path>
+                        </svg>
+                      </div>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </transition-group>
+          </template>
+        </FilterDropdown>
+        <FilterDropdown
+          label="Location"
+          location="bottom-right"
+          menuWidth="320px"
+          menuHeight="225px"
+        >
+          <template v-slot:menu>
+            <div
+              class="flex w-[318px] flex-col divide-gray-200 divide-y h-full"
+            >
+              <div>
+                <div class="flex items-center px-4 py-4">
+                  <label for="simple-search" class="sr-only">Search</label>
+                  <div class="relative w-full">
+                    <div
+                      class="flex absolute inset-y-0 right-0 items-center pr-3 pointer-events-none"
+                    >
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke-width="1.5"
+                        stroke="currentColor"
+                        class="w-6 h-6 z-50"
+                      >
+                        <path
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z"
+                        />
+                      </svg>
+                    </div>
+                    <input
+                      type="text"
+                      id="simple-search"
+                      class="border-[1px] border-gray-300 rounded-md focus:ring-black focus:border-gray-200 duration-150 animation block w-full h-[40px] p-2.5"
+                      placeholder="Enter a Zip-Code or City"
+                      required
+                    />
+                  </div>
+                </div>
+                <div class="px-4 py-2">
+                  <div class="flex justify-between">
+                    <span
+                      class="mb-2 text-sm font-medium text-[#3cce69] dark:text-white"
+                      >Radius</span
+                    >
+                    <span
+                      v-if="locationValue != 15"
+                      class="mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                      >{{ locationArray[locationValue] }} mi</span
+                    >
+                    <span
+                      v-else
+                      class="mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                      >{{ locationArray[locationValue] }}</span
+                    >
+                  </div>
+                  <InputRange v-model="locationValue" :min="0" :max="15" />
+                </div>
+              </div>
+              <div class="flex h-full justify-end items-center space-x-8 pr-4">
+                <button>
+                  <span class="leading-[22px] font-bold">Clear</span>
+                </button>
+                <button class="bg-green-400 rounded-full px-4 py-2 text-white">
+                  <span class="leading-[22px] font-bold">Apply</span>
+                </button>
               </div>
             </div>
           </template>
-        </Dropdown>
-        <Dropdown :options="mainCategories" location="bottom-right">
-          <template v-slot:button>
-            <button
-              class="
-                flex
-                items-center
-                justify-between
-                w-full
-                px-4
-                py-2
-                text-base
-                leading-[22px]
-                bg-white
-                rounded-full
-                border border-gray-200
-                hover:bg-[#E2E8EB]
-              "
+        </FilterDropdown>
+        <FilterDropdown
+          v-model="filterValue.price"
+          label="Price"
+          :options="mainCategories"
+          location="bottom-right"
+          menuWidth="320px"
+          menuHeight="175px"
+        >
+          <template v-slot:menu>
+            <div
+              class="flex w-[318px] flex-col divide-gray-200 divide-y h-full"
             >
-              Location
-              <svg
-                class="w-4 h-4 ml-1"
-                aria-hidden="true"
-                fill="currentColor"
-                viewBox="0 0 20 20"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  fill-rule="evenodd"
-                  d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-                  clip-rule="evenodd"
-                ></path>
-              </svg>
-            </button>
+              <div class="flex flex-row px-4 py-4 space-x-4">
+                <div class="flex flex-col flex-1">
+                  <span class="text-black">From</span>
+                  <input
+                    type="number"
+                    min="0"
+                    max="9999"
+                    placeholder="0"
+                    class="w-full rounded-lg border-gray-300 focus:border-black focus:ring-0 mt-2"
+                  />
+                </div>
+                <div class="flex flex-col flex-1">
+                  <span class="text-black">To</span>
+                  <input
+                    type="number"
+                    min="0"
+                    max="9999"
+                    placeholder="No limit"
+                    class="w-full rounded-lg border-gray-300 focus:border-black focus:ring-0 mt-2"
+                  />
+                </div>
+              </div>
+              <div class="flex h-full justify-end items-center space-x-8 pr-4">
+                <button>
+                  <span class="leading-[22px] font-bold">Clear</span>
+                </button>
+                <button class="bg-green-400 rounded-full px-4 py-2 text-white">
+                  <span class="leading-[22px] font-bold">Apply</span>
+                </button>
+              </div>
+            </div>
           </template>
-          <template v-slot:menu></template>
-        </Dropdown>
-        <Dropdown :options="mainCategories" location="bottom-right">
-          <template v-slot:button>
-            <button
-              class="
-                flex
-                items-center
-                justify-between
-                w-full
-                px-4
-                py-2
-                text-base
-                leading-[22px]
-                bg-white
-                rounded-full
-                border border-gray-200
-                hover:bg-[#E2E8EB]
-              "
+        </FilterDropdown>
+        <FilterDropdown
+          v-model="filterValue.dateListed"
+          label="Date Listed"
+          location="bottom-right"
+          menuWidth="320px"
+          menuHeight="175px"
+        >
+          <template #menu="{ toggleMenu }">
+            <ul
+              class="text-[16px] leading-[22px] flex flex-col h-full"
+              aria-labelledby="dropdownButton"
             >
-              Price
-              <svg
-                class="w-4 h-4 ml-1"
-                aria-hidden="true"
-                fill="currentColor"
-                viewBox="0 0 20 20"
-                xmlns="http://www.w3.org/2000/svg"
+              <li
+                v-for="(option, index) in dateListedArray"
+                :key="index"
+                :value="index"
+                @click="clickDateListedHandle(option, toggleMenu)"
+                class="block flex-1"
               >
-                <path
-                  fill-rule="evenodd"
-                  d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-                  clip-rule="evenodd"
-                ></path>
-              </svg>
-            </button>
+                <div
+                  v-if="option == filterValue.dateListed"
+                  class="flex h-full items-center px-4 active:bg-gray-100 dark:hover:bg-gray-600 cursor-pointer"
+                >
+                  <span class="font-bold dark:hover:text-white">
+                    {{ option }}
+                  </span>
+                  <span class="text-gray-400 ml-1">(0) </span>
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke-width="2"
+                    stroke="currentColor"
+                    class="w-6 h-6 ml-auto"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      d="M4.5 12.75l6 6 9-13.5"
+                    />
+                  </svg>
+                </div>
+                <div
+                  v-else
+                  class="flex h-full items-center px-4 active:bg-gray-100 dark:hover:bg-gray-600 cursor-pointer"
+                >
+                  <span class="dark:hover:text-white">
+                    {{ option }}
+                  </span>
+                  <span class="text-gray-400 ml-1">(0)</span>
+                </div>
+              </li>
+            </ul>
           </template>
-          <template v-slot:menu></template>
-        </Dropdown>
-        <Dropdown :options="mainCategories" location="bottom-right">
-          <template v-slot:button>
-            <button
-              class="
-                flex
-                items-center
-                justify-between
-                w-full
-                px-4
-                py-2
-                text-base
-                leading-[22px]
-                bg-white
-                rounded-full
-                border border-gray-200
-                hover:bg-[#E2E8EB]
-              "
+        </FilterDropdown>
+        <FilterDropdown
+          v-model="filterValue.sort"
+          label="Sort"
+          :options="mainCategories"
+          location="bottom-right"
+          menuWidth="320px"
+          menuHeight="235px"
+        >
+          <template #menu="{ toggleMenu }">
+            <ul
+              class="text-[16px] leading-[22px] flex flex-col h-full"
+              aria-labelledby="dropdownButton"
             >
-              Date listed
-              <svg
-                class="w-4 h-4 ml-1"
-                aria-hidden="true"
-                fill="currentColor"
-                viewBox="0 0 20 20"
-                xmlns="http://www.w3.org/2000/svg"
+              <li
+                v-for="(option, index) in sortArray"
+                :key="index"
+                :value="index"
+                @click="clickSortHandle(option, toggleMenu)"
+                class="block flex-1"
               >
-                <path
-                  fill-rule="evenodd"
-                  d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-                  clip-rule="evenodd"
-                ></path>
-              </svg>
-            </button>
+                <div
+                  v-if="option == filterValue.sort"
+                  class="flex h-full items-center px-4 active:bg-gray-100 dark:hover:bg-gray-600 cursor-pointer"
+                >
+                  <span class="font-bold dark:hover:text-white">
+                    {{ option }}
+                  </span>
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke-width="2"
+                    stroke="currentColor"
+                    class="w-6 h-6 ml-auto"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      d="M4.5 12.75l6 6 9-13.5"
+                    />
+                  </svg>
+                </div>
+                <div
+                  v-else
+                  class="px-4 h-full items-center flex active:bg-gray-100 dark:hover:bg-gray-600 cursor-pointer"
+                >
+                  <span class="dark:hover:text-white">
+                    {{ option }}
+                  </span>
+                </div>
+              </li>
+            </ul>
           </template>
-          <template v-slot:menu></template>
-        </Dropdown>
-        <Dropdown :options="mainCategories" location="bottom-right">
-          <template v-slot:button>
-            <button
-              class="
-                flex
-                items-center
-                justify-between
-                w-full
-                px-4
-                py-2
-                text-base
-                leading-[22px]
-                bg-white
-                rounded-full
-                border border-gray-200
-                hover:bg-[#E2E8EB]
-              "
-            >
-              Sort
-              <svg
-                class="w-4 h-4 ml-1"
-                aria-hidden="true"
-                fill="currentColor"
-                viewBox="0 0 20 20"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  fill-rule="evenodd"
-                  d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-                  clip-rule="evenodd"
-                ></path>
-              </svg>
-            </button>
-          </template>
-          <template v-slot:menu></template>
-        </Dropdown>
+        </FilterDropdown>
       </div>
     </div>
   </div>
 </template>
 
 <style lang="scss" scoped>
-.dropdown-menu div:not(:first-child):not(:last-child) {
-  transform: translateX(-200%);
-}
-
 .slide-leave-active,
 .slide-enter-active {
   transition: 0.5s;
@@ -450,67 +511,9 @@ const categoryTurnBackClickHandle = () => {
 .slide-enter-from {
   transform: translate(100%, 0) !important;
 }
-// .slide-enter-to {
-//   transform: translate(0, 0);
-// }
 .slide-leave-to {
   transform: translate(100%, 0) !important;
 }
-
-.slide-to-left {
-  transform: translateX(-100%);
-}
-.slide-to-right {
-  transform: translateX(100%);
-}
-
-@keyframes slide-to-left {
-  100% {
-    margin-left: -320px;
-  }
-}
-@keyframes slide-to-right {
-  100% {
-    margin-left: 0px;
-  }
-}
-
-.slide-left {
-  animation: 0.2s slide-left;
-}
-@keyframes slide-left {
-  from {
-    margin-left: 100%;
-  }
-  to {
-    margin-left: 0%;
-  }
-}
-
-/***** Slide Right *****/
-.slide-right {
-  animation: 3s slide-right;
-}
-@keyframes slide-right {
-  from {
-    margin-left: -100%;
-  }
-  to {
-    margin-left: 0%;
-  }
-}
-
-// .slide-out-enter-active,
-// .slide-out-leave-active {
-//   transition: 0.5s;
-// }
-
-// .slide-out-enter {
-//   transform: translate(100%, 0);
-// }
-// .slide-out-leave-to {
-//   transform: translate(-100%, 0);
-// }
 </style>
 
 

@@ -4,18 +4,6 @@ import useDetectOutsideClick from "../../composables/useDetectOutsideClick";
 const props = defineProps({
   modelValue: String,
   label: String,
-  labelWidth: {
-    type: String,
-    default: "100px",
-  },
-  labelColor: {
-    type: String,
-    default: "white",
-  },
-  labelBackground: {
-    type: String,
-    default: "var(--color-blue-4)",
-  },
   options: {
     type: Array,
     default: [],
@@ -34,7 +22,7 @@ const props = defineProps({
   },
 });
 
-const emit = defineEmits(["update:label"]);
+const emit = defineEmits(["update:modelValue"]);
 
 const dropdownRef = ref();
 const isShowMenu = ref(false);
@@ -63,8 +51,8 @@ const locationClass = computed(() => {
 });
 
 const clickHandle = (option) => {
-  if (option != props.label) {
-    emit("update:label", option);
+  if (option != props.modelValue) {
+    emit("update:modelValue", option);
   }
   isShowMenu.value = false;
 };
@@ -78,65 +66,64 @@ useDetectOutsideClick(dropdownRef, () => {
 });
 </script>
 <template>
-  <div class="relative w-fit" ref="dropdownRef">
+  <div class="relative w-fit space-y-1" ref="dropdownRef">
     <!-- Dropdown button -->
-    <div @click="isShowMenu = !isShowMenu" class="w-fit">
-      <slot name="button">
-        <button
-          id="dropdownButton"
-          data-dropdown-toggle="dropdown"
-          class="
-            flex
-            items-center
-            justify-between
-            w-full
-            mx-1
-            pl-3
-            pr-4
-            font-medium
-            text-gray-700
-            border-b border-gray-100
-            hover:bg-gray-50
-            md:hover:bg-transparent
-            md:border-0
-            md:hover:text-blue-700
-            md:p-0
-            md:w-auto
-          "
+    <div
+      v-if="modelValue"
+      class="flex items-center h-9 shadow-md rounded-full text-green-400"
+    >
+      <button
+        class="flex items-center rounded-l-full h-full p-2 pl-4 bg-white hover:bg-[#E2E8EB] text-base leading-[22px]"
+        @click="toggleMenu"
+      >
+        {{ label }}
+      </button>
+      <button
+        class="flex items-center rounded-r-full h-full p-2 pr-4 bg-white hover:bg-[#E2E8EB]"
+        @click="$emit('update:modelValue', ''), (isShowMenu = false)"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke-width="1.5"
+          stroke="currentColor"
+          class="w-5 h-5"
         >
-          <slot name="buttonLabel">
-            {{ label }}
-            <svg
-              class="w-4 h-4 ml-1"
-              aria-hidden="true"
-              fill="currentColor"
-              viewBox="0 0 20 20"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                fill-rule="evenodd"
-                d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-                clip-rule="evenodd"
-              ></path>
-            </svg>
-          </slot>
-        </button>
-      </slot>
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            d="M6 18L18 6M6 6l12 12"
+          />
+        </svg>
+      </button>
+    </div>
+    <div v-else>
+      <button
+        class="shadow-md inline-flex h-9 items-center p-4 text-base leading-[22px] bg-white rounded-full hover:bg-[#E2E8EB]"
+        @click="toggleMenu"
+      >
+        {{ label }}
+        <svg
+          class="w-5 h-5 ml-4"
+          aria-hidden="true"
+          fill="currentColor"
+          viewBox="0 0 20 20"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            fill-rule="evenodd"
+            d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+            clip-rule="evenodd"
+          ></path>
+        </svg>
+      </button>
     </div>
     <!-- Dropdown menu -->
     <div
       id="dropdownMenu"
       v-show="isShowMenu"
-      class="
-        absolute
-        bg-white
-        rounded-lg
-        z-10
-        shadow
-        text-left
-        dark:bg-gray-700 dark:divide-gray-600
-        overflow-x-hidden overflow-y-hidden
-      "
+      class="absolute bg-white rounded-lg z-10 shadow text-left dark:bg-gray-700 dark:divide-gray-600 overflow-x-hidden overflow-y-hidden"
       :class="locationClass"
     >
       <slot name="menu" :toggleMenu="toggleMenu">
@@ -152,15 +139,7 @@ useDetectOutsideClick(dropdownRef, () => {
             class="block"
           >
             <p
-              class="
-                block
-                px-4
-                py-2
-                hover:bg-gray-100
-                dark:hover:bg-gray-600 dark:hover:text-white
-                cursor-pointer
-              "
-              :style="option == label ? 'color: #3CCE69' : ''"
+              class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white cursor-pointer"
             >
               {{ option }}
             </p>
