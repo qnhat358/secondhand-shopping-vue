@@ -1,10 +1,14 @@
 <script setup>
-import { ref, onBeforeMount } from "vue";
+import { ref, onBeforeMount, watch } from "vue";
+import { useRoute, useRouter } from "vue-router";
 import Dropdown from "./common/Dropdown.vue";
+
+const router = useRouter();
+const route = useRoute();
 
 const dropdownItems = ["Help Centre", "Shpock + for professionals"];
 const atTopOfPage = ref(true);
-
+const searchValue = ref(route.query.q ?? "");
 // the function to call when the user scrolls, added as a method
 const handleScroll = () => {
   // when the user scrolls, check the pageYOffset
@@ -17,6 +21,17 @@ const handleScroll = () => {
   }
 };
 
+const searchHandle = () => {
+  router.push({ name: "result", query: { q: searchValue.value } });
+};
+
+watch(
+  () => route.query,
+  () => {
+    location.reload();
+  }
+);
+
 onBeforeMount(async () => {
   window.addEventListener("scroll", handleScroll);
 });
@@ -25,49 +40,20 @@ onBeforeMount(async () => {
 <template>
   <nav
     :class="{ scrolled: !atTopOfPage }"
-    class="
-      fixed
-      flex
-      w-full
-      h-[72px]
-      bg-white
-      items-center
-      justify-between
-      flex-wrap
-      m-auto
-      top-0
-      left-0
-      animated
-      transition
-      duration-500
-    "
+    class="fixed flex w-full h-[72px] bg-white items-center justify-between flex-wrap m-auto top-0 left-0 animated transition duration-500"
   >
     <div
-      class="
-        flex flex-wrap
-        items-center
-        justify-between
-        mx-auto
-        w-[1240px]
-        h-full
-        px-8
-      "
+      class="flex flex-wrap items-center justify-between mx-auto w-[1240px] h-full px-8"
     >
       <div class="flex">
-        <img src="../assets/images/shpock.svg" width="146.22" />
+        <router-link :to="{ name: 'home' }" class="hover:bg-transparent">
+          <img src="../assets/images/shpock.svg" width="146.22" />
+        </router-link>
         <div class="flex items-center ml-4">
           <label for="simple-search" class="sr-only">Search</label>
           <div class="relative w-[500px]">
             <div
-              class="
-                flex
-                absolute
-                inset-y-0
-                left-0
-                items-center
-                pl-3
-                pointer-events-none
-              "
+              class="flex absolute inset-y-0 left-0 items-center pl-3 pointer-events-none"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -87,20 +73,11 @@ onBeforeMount(async () => {
             <input
               type="text"
               id="simple-search"
-              class="
-                border-[1px] border-gray-300
-                rounded-full
-                focus:ring-black focus:border-gray-200
-                duration-150
-                animation
-                block
-                w-full
-                h-[40px]
-                pl-10
-                p-2.5
-              "
+              class="border-[1px] border-gray-300 rounded-full focus:ring-black focus:border-gray-200 duration-150 animation block w-full h-[40px] pl-10 p-2.5"
               placeholder="What are you looking for..."
               required
+              v-model="searchValue"
+              @keyup.enter="searchHandle"
             />
           </div>
         </div>
@@ -110,32 +87,12 @@ onBeforeMount(async () => {
         id="navbar-sticky"
       >
         <ul
-          class="
-            flex flex-col
-            mt-4
-            border border-gray-100
-            rounded-lg
-            bg-gray-50
-            md:flex-row
-            md:space-x-8
-            md:mt-0
-            md:text-sm
-            md:font-medium
-            md:border-0
-            md:bg-white
-            dark:bg-gray-800
-            md:dark:bg-gray-900
-            dark:border-gray-700
-          "
+          class="flex flex-col mt-4 border border-gray-100 rounded-lg bg-gray-50 md:flex-row md:space-x-8 md:mt-0 md:text-sm md:font-medium md:border-0 md:bg-white dark:bg-gray-800 md:dark:bg-gray-900 dark:border-gray-700"
         >
           <li>
             <a
               href="#"
-              class="
-                text-black text-[16px]
-                font-bold
-                hover:bg-transparent hover:text-gray-500
-              "
+              class="text-black text-[16px] font-bold hover:bg-transparent hover:text-gray-500"
               aria-current="page"
               >+ Add new listing</a
             >
@@ -143,22 +100,14 @@ onBeforeMount(async () => {
           <li>
             <a
               href="#"
-              class="
-                text-black text-[16px]
-                font-bold
-                hover:bg-transparent hover:text-gray-500
-              "
+              class="text-black text-[16px] font-bold hover:bg-transparent hover:text-gray-500"
               >Sign up</a
             >
           </li>
           <li>
             <a
               href="#"
-              class="
-                text-black text-[16px]
-                font-bold
-                hover:bg-transparent hover:text-gray-500
-              "
+              class="text-black text-[16px] font-bold hover:bg-transparent hover:text-gray-500"
               >Log in</a
             >
           </li>
@@ -170,11 +119,7 @@ onBeforeMount(async () => {
             >
               <template v-slot:buttonLabel>
                 <div
-                  class="
-                    text-black text-[16px]
-                    font-bold
-                    hover:bg-transparent hover:text-gray-500
-                  "
+                  class="text-black text-[16px] font-bold hover:bg-transparent hover:text-gray-500"
                 >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"

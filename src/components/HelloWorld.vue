@@ -60,9 +60,7 @@ const feedbacks = [
 </script>
 
 <template>
-  <div
-    class="flex items-center justify-between mx-auto w-[1240px] px-8"
-  >
+  <div class="flex items-center justify-between mx-auto w-[1240px] px-8 mb-11">
     <div>
       <div class="main-banner flex justify-center mt-5 mb-10">
         <div class="main-banner__text">
@@ -92,15 +90,7 @@ const feedbacks = [
             See what Shpockers are saying
           </p>
           <div
-            class="
-              grid
-              feedback-items
-              grid-cols-3
-              gap-4
-              text-left
-              w-full
-              items-start
-            "
+            class="grid feedback-items grid-cols-3 gap-4 text-left w-full items-start"
           >
             <div
               v-for="n in 3"
@@ -124,25 +114,10 @@ const feedbacks = [
         </div>
         <div class="flex justify-center relative">
           <div
-            class="
-              w-[1160px]
-              absolute
-              top-1/2
-              left-1/2
-              z-50
-              -translate-x-1/2 -translate-y-1/2
-              grid grid-cols-6
-            "
+            class="w-[1160px] absolute top-1/2 left-1/2 z-50 -translate-x-1/2 -translate-y-1/2 grid grid-cols-6"
           >
             <div
-              class="
-                col-span-3
-                flex
-                justify-center
-                content-center
-                flex-col
-                text-black
-              "
+              class="col-span-3 flex justify-center content-center flex-col text-black"
             >
               <p class="font-bold text-[30px] leading-[42px]">
                 Zero fees. Zero hassle.
@@ -150,13 +125,7 @@ const feedbacks = [
               <p class="font-bold text-[64px] leading-[74px]">SIMPLE</p>
             </div>
             <div
-              class="
-                col-start-5 col-end-7
-                flex
-                justify-center
-                items-center
-                flex-col
-              "
+              class="col-start-5 col-end-7 flex justify-center items-center flex-col"
             >
               <img
                 src="../assets/images/shpock.svg"

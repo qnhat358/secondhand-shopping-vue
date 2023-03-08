@@ -12,7 +12,7 @@ const route = useRoute();
     <Header></Header>
 
     <!-- Main Content -->
-    <div class="mt-[72px] pb-[41px]" :class="{'bg-[#F7F8F7]':route.name == 'result'}">
+    <div class="mt-[72px]" :class="{ 'bg-[#F7F8F7]': route.name == 'result' }">
       <slot></slot>
     </div>
     <Footer></Footer>

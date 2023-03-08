@@ -1,9 +1,13 @@
 <script setup>
 import { ref } from "vue";
+import { useRouter, useRoute } from "vue-router";
 import SlideImageGroup from "./common/SlideImageGroup.vue";
 import InputRange from "./common/InputRange.vue";
 import FeedbackCard from "./home/FeedbackCard.vue";
+import ProductCard from "./result/ProductCard.vue";
 import FilterDropdown from "./result/FilterDropdown.vue";
+
+const route = useRoute();
 
 const filterValue = ref({
   category: "",
@@ -44,7 +48,7 @@ const sortArray = [
   "Price low to high",
 ];
 const locationValue = ref(0);
-const searchValue = ref("result");
+const searchValue = ref(route.query.q);
 const isShowSlideMenu = ref(false);
 const isSlideLeft = ref([false]);
 const isSlideRight = ref([false]);
@@ -96,6 +100,8 @@ const mainCategories = ref([
 ]);
 
 const subCategories = ref([{ subMenu: mainCategories }]);
+const isHasResult = ref(true);
+
 const categoryClickHandle = (category, toggleMenu) => {
   if (category.subMenu) {
     subCategories.value[subCategories.value.length - 1].position = "left";
@@ -124,8 +130,10 @@ const clickSortHandle = (sort, toggleMenu) => {
 </script>
 
 <template>
-  <div class="flex justify-between mx-auto w-[1240px] h-[650px] px-8">
-    <div>
+  <div
+    class="flex flex-col items-center mx-auto w-[1240px] min-h-[calc(100vh-72px)] px-8 pt-10 mb-10"
+  >
+    <div class="self-start mb-10">
       <nav class="flex" aria-label="Breadcrumb">
         <ol class="inline-flex items-center">
           <li class="inline-flex items-center">
@@ -180,15 +188,17 @@ const clickSortHandle = (sort, toggleMenu) => {
           </li>
         </ol>
       </nav>
-      <span class="font-bold text-black text-3xl leading-[42px]">
-        Ads for “{{ searchValue }}” for Sale
-      </span>
-      <span
-        v-if="filterValue.category"
-        class="font-bold text-black text-3xl leading-[42px]"
-      >
-        in “{{ filterValue.category }}”
-      </span>
+      <div class="search-title mb-4">
+        <span class="font-bold text-black text-3xl leading-[42px]">
+          Ads for “{{ searchValue }}” for Sale
+        </span>
+        <span
+          v-if="filterValue.category"
+          class="font-bold text-black text-3xl leading-[42px]"
+        >
+          in “{{ filterValue.category }}”
+        </span>
+      </div>
       <div class="flex space-x-2">
         <FilterDropdown
           v-model="filterValue.category"
@@ -498,6 +508,52 @@ const clickSortHandle = (sort, toggleMenu) => {
             </ul>
           </template>
         </FilterDropdown>
+      </div>
+    </div>
+    <div
+      v-if="isHasResult"
+      class="self-start grid grid-cols-1 md:grid-cols-4 gap-2"
+    >
+      <ProductCard
+        v-for="n in 9"
+        :key="n"
+        :image="`product${n}.jfif`"
+      ></ProductCard>
+    </div>
+    <div v-else class="flex flex-col items-center mr-[300px]">
+      <img src="../assets/images/no-result.png" class="h-[320px] w-[320px]" />
+      <div class="w-[422px] text-center">
+        <p class="text-[22px] leading-[32px] font-bold mb-4">No results</p>
+        <p class="text-[22px] leading-[32px] break-words mb-3">
+          We weren't able to find what you're looking for at the moment. Try
+          shopping by category or changing your search terms.
+        </p>
+      </div>
+      <button class="text-white font-bold bg-black rounded-full px-6 py-2">
+        Discover items near you
+      </button>
+    </div>
+  </div>
+  <div class="h-[286px] bg-gradient-135 from-[#76dc96] to-[#009e49]">
+    <div class="w-[1240px] h-full mx-auto px-8 flex flex-row">
+      <div class="flex items-end justify-center flex-[5]">
+        <img
+          src="../assets/images/result-banner.png"
+          class="h-[230px] w-[230px]"
+        />
+      </div>
+      <div class="flex flex-col flex-[7] px-8 py-8 justify-around">
+        <h3 class="text-white font-bold text-3xl leading-[42px]">
+          Get the App
+        </h3>
+        <p class="text-white text-[22px] leading-8 break-words">
+          Download for free now and start buying or selling (almost) anything.
+          Zero fees. Zero hassle. Zero reason not to!
+        </p>
+        <div class="flex flex-row mt-[20px] gap-[12px]">
+          <img src="../assets/images/googleplay.svg" class="h-[40px]" />
+          <img src="../assets/images/appstore.svg" class="h-[40px]" />
+        </div>
       </div>
     </div>
   </div>
